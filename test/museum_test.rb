@@ -17,6 +17,7 @@ class MuseumTest < Minitest::Test
 
     assert_equal "Denver Museum of Nature and Science", dmns.name
     assert_equal [], dmns.exhibits
+    assert_equal [], dmns.patrons
   end
 
   def test_it_can_add_exhibits
@@ -50,6 +51,17 @@ class MuseumTest < Minitest::Test
     assert_equal [imax], dmns.reccommend_exhibits(sally)
   end
 
+  def test_it_can_admit_patrons
+    dmns = Museum.new("Denver Museum of Nature and Science")
+    bob = Patron.new("Bob", 20)
+    sally = Patron.new("Sally", 20)
+
+    dmns.admit(bob)
+    dmns.admit(sally)
+
+    assert_equal [bob, sally], dmns.patrons
+  end
+
   def test_it_knows_patrons_by_interests
     dmns = Museum.new("Denver Museum of Nature and Science")
     gems_and_minerals = Exhibit.new("Gems and Minerals", 0)
@@ -63,7 +75,9 @@ class MuseumTest < Minitest::Test
     bob.add_interest("Gems and Minerals")
     sally = Patron.new("Sally", 20)
     sally.add_interest("IMAX")
+    dmns.admit(bob)
+    dmns.admit(sally)
 
-
+    assert_instance_of Hash, dmns.patrons_by_exhibit_interest
   end
 end
